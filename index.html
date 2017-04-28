@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Title</title>
+    <title>TypeScript - good practices & pro techniques</title>
 
     <meta name="author" content="Siili">
 
@@ -27,9 +27,125 @@
 <div class="reveal">
     <div class="slides">
         <section>
-            <h1>Title</h1>
-            <p>Sub-title</p>
-            <small>Author</small>
+            <h1>TypeScript</h1>
+            <p>good practices & pro techniques</p>
+            <small>Kamil Durkiewicz</small>
+        </section>
+        <section>
+            <h2>Agenda</h2>
+            <ol>
+                <li>TODO.</li>
+            </ol>
+        </section>
+        <section>
+            <h2>TypeScript - facts</h2>
+            <ul>
+                <li>1st release: 2012-10-01</li>
+                <li>Currently in version 2.3</li>
+                <li>Open source, maintained by Microsoft</li>
+                <li>Compiled to JavaScript</li>
+                <li>Only a language (without frameworks)</li>
+            </ul>
+        </section>
+        <section data-markdown>
+            <script type="text/template">
+                ## `--strict` flag
+
+                Strict behaviour is not by default.
+
+                Equivalent to:
+                ```
+                --strictNullChecks
+                --noImplicitAny
+                --noImplicitThis
+                --alwaysStrict
+                ```
+            </script>
+        </section>
+        <section>
+            <section>
+                <h2>Classes</h2>
+            </section>
+            <section>
+                <h2>Constructors and getters</h2>
+                <ul>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=class%20Point%20%7B%0D%0A%20%20%20%20private%20_x%3A%20number%3B%0D%0A%20%20%20%20private%20_y%3A%20number%3B%0D%0A%0D%0A%20%20%20%20constructor(x%3A%20number%2C%20y%3A%20number)%20%7B%0D%0A%20%20%20%20%20%20%20%20this._x%20%3D%20x%0D%0A%20%20%20%20%20%20%20%20this._y%20%3D%20y%3B%0D%0A%20%20%20%20%7D%0D%0A%0D%0A%20%20%20%20public%20get%20x()%3A%20number%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20this._x%3B%0D%0A%20%20%20%20%7D%0D%0A%0D%0A%20%20%20%20public%20get%20y()%3A%20number%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20this._y%3B%0D%0A%20%20%20%20%7D%0D%0A%7D%0D%0A">
+                            Too verbose
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=class%20Point%20%7B%0D%0A%20%20%20%20constructor(%0D%0A%20%20%20%20%20%20%20%20private%20_x%3A%20number%2C%0D%0A%20%20%20%20%20%20%20%20private%20_y%3A%20number%0D%0A%20%20%20%20)%20%7B%20%7D%0D%0A%0D%0A%20%20%20%20public%20get%20x()%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20this._x%3B%0D%0A%20%20%20%20%7D%0D%0A%0D%0A%20%20%20%20public%20get%20y()%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20this._y%3B%0D%0A%20%20%20%20%7D%0D%0A%7D%0D%0A">
+                            Shorter
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=class%20Point%20%7B%0D%0A%20%20%20%20constructor(%0D%0A%20%20%20%20%20%20%20%20public%20readonly%20x%3A%20number%2C%0D%0A%20%20%20%20%20%20%20%20public%20readonly%20y%3A%20number%2C%0D%0A%20%20%20%20)%20%7B%20%7D%0D%0A%7D%0D%0A">
+                            Shortest
+                        </a>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h2>Class is also an interface</h2>
+                <ul>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=interface%20Customer%20%7B%0D%0A%20%20%20%20id%3A%20number%3B%0D%0A%20%20%20%20name%3A%20string%3B%0D%0A%7D%0D%0A%0D%0Ainterface%20CustomerService%20%7B%0D%0A%20%20%20%20getCustomer(id%3A%20number)%3A%20Promise%3CCustomer%3E%3B%0D%0A%7D%0D%0A%0D%0Aclass%20CustomerServiceImpl%20implements%20CustomerService%20%7B%0D%0A%20%20%20%20public%20getCustomer(id%3A%20number)%3A%20Promise%3CCustomer%3E%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20this.getResource(%60https%3A%2F%2FmyApi.com%2Fcustomers%2F%24%7B%20id%20%7D%60)%3B%0D%0A%20%20%20%20%7D%0D%0A%0D%0A%20%20%20%20private%20getResource%3CT%3E(url%3A%20string)%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20fetch(url)%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20.then(res%20%3D%3E%20res.json()%20as%20Promise%3CT%3E)%3B%0D%0A%20%20%20%20%7D%0D%0A%7D%0D%0A%0D%0Aclass%20MockCustomerService%20implements%20CustomerService%20%7B%0D%0A%20%20%20%20constructor(private%20mockCustomer%3A%20Customer)%20%7B%20%7D%0D%0A%0D%0A%20%20%20%20public%20getCustomer()%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20Promise.resolve(this.mockCustomer)%3B%0D%0A%20%20%20%20%7D%0D%0A%7D%0D%0A%0D%0Aconst%20mockCustomerService%3A%20CustomerService%20%3D%20%7B%0D%0A%20%20%20%20getCustomer%3A%20()%20%3D%3E%20Promise.resolve(%7B%20id%3A%201%2C%20name%3A%20'John%20Doe'%20%7D)%2C%0D%0A%7D%3B%0D%0A">
+                            Java style
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=interface%20Customer%20%7B%0D%0A%20%20%20%20id%3A%20number%3B%0D%0A%20%20%20%20name%3A%20string%3B%0D%0A%7D%0D%0A%0D%0Aclass%20CustomerService%20%7B%0D%0A%20%20%20%20public%20getCustomer(id%3A%20number)%3A%20Promise%3CCustomer%3E%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20fetch(%60https%3A%2F%2FmyApi.com%2Fcustomers%2F%24%7Bid%7D%60)%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20.then(res%20%3D%3E%20res.json()%20as%20Promise%3CCustomer%3E)%3B%0D%0A%20%20%20%20%7D%0D%0A%7D%0D%0A%0D%0Aclass%20MockCustomerService%20implements%20CustomerService%20%7B%0D%0A%20%20%20%20constructor(private%20mockCustomer%3A%20Customer)%20%7B%20%7D%0D%0A%0D%0A%20%20%20%20public%20getCustomer()%20%7B%0D%0A%20%20%20%20%20%20%20%20return%20Promise.resolve(this.mockCustomer)%3B%0D%0A%20%20%20%20%7D%0D%0A%7D%0D%0A%0D%0Aconst%20mockCustomerService%3A%20CustomerService%20%3D%20%7B%0D%0A%20%20%20%20getCustomer%3A%20()%20%3D%3E%20Promise.resolve(%7B%20id%3A%201%2C%20name%3A%20'John%20Doe'%20%7D)%2C%0D%0A%7D%3B%0D%0A">
+                            Shorter but not very useful
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <h2>Currying</h2>
+            <ul>
+                <li>
+                    <a href="https://www.typescriptlang.org/play/index.html#src=function%20add(a%3A%20number%2C%20b%3A%20number)%20%7B%0D%0A%20%20%20%20return%20a%20%2B%20b%3B%0D%0A%7D%0D%0A%0D%0Aconst%20increment%20%3D%20add.bind(undefined%2C%201)%3B%0D%0A%0D%0Aincrement(%22string%22)%3B%0D%0A">
+                        Wrong
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.typescriptlang.org/play/index.html#src=const%20add%20%3D%20(a%3A%20number)%20%3D%3E%20(b%3A%20number)%20%3D%3E%0D%0A%20%20%20%20a%20%2B%20b%3B%0D%0A%0D%0Aconst%20increment%20%3D%20add(1)%3B%0D%0A%0D%0Aincrement(%22string%22)%3B%0D%0A">
+                        Correct
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h2>Function / method overloading</h2>
+            <ul>
+                <li>
+                    <a href="https://www.typescriptlang.org/play/index.html#src=function%20tupleImpl(...args)%20%7B%0D%0A%20%20%20%20return%20args%3B%0D%0A%7D%0D%0A%0D%0Ainterface%20CreateTuple%20%7B%0D%0A%20%20%20%20%3CT1%2C%20T2%3E(a1%3A%20T1%2C%20a2%3A%20T2)%3A%20%5BT1%2C%20T2%5D%3B%0D%0A%20%20%20%20%3CT1%2C%20T2%2C%20T3%3E(a1%3A%20T1%2C%20a2%3A%20T2%2C%20a3%3A%20T3)%3A%20%5BT1%2C%20T2%2C%20T3%5D%3B%0D%0A%20%20%20%20%3CT1%2C%20T2%2C%20T3%2C%20T4%3E(a1%3A%20T1%2C%20a2%3A%20T2%2C%20a3%3A%20T3%2C%20a4%3A%20T4)%3A%20%5BT1%2C%20T2%2C%20T3%2C%20T4%5D%3B%0D%0A%7D%0D%0A%0D%0Aconst%20tuple%3A%20CreateTuple%20%3D%20tupleImpl%20as%20any%3B%0D%0A%0D%0Aconst%20t%20%3D%20tuple(1%2C%20'2'%2C%20true)%3B%0D%0A">
+                        Example with tuples
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <section>
+                <h2>Generic types</h2>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## `--strict` flag
+
+                    Strict behaviour is not by default.
+
+                    Equivalent to:
+                    ```
+                    --strictNullChecks
+                    --noImplicitAny
+                    --noImplicitThis
+                    --alwaysStrict
+                    ```
+                </script>
+            </section>
         </section>
     </div>
 </div>
