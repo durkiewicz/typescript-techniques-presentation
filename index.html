@@ -63,6 +63,16 @@
             </script>
         </section>
         <section>
+            <h2>Avoid dynamic typing</h2>
+            <ul>
+                <li>any</li>
+                <li>Function</li>
+                <li>Object</li>
+                <li>object</li>
+                <li>bind, call, apply</li>
+            </ul>
+        </section>
+        <section>
             <section>
                 <h2>Classes</h2>
             </section>
@@ -131,20 +141,55 @@
             <section>
                 <h2>Generic types</h2>
             </section>
-            <section data-markdown>
-                <script type="text/template">
-                    ## `--strict` flag
-
-                    Strict behaviour is not by default.
-
-                    Equivalent to:
-                    ```
-                    --strictNullChecks
-                    --noImplicitAny
-                    --noImplicitThis
-                    --alwaysStrict
-                    ```
-                </script>
+            <section>
+                <h2>Don't forget about generics</h2>
+                <ul>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=function%20getItemById(%0D%0A%20%20%20%20items%3A%20%7B%20id%3A%20number%20%7D%5B%5D%2C%0D%0A%20%20%20%20id%3A%20number%2C%0D%0A)%20%7B%0D%0A%20%20%20%20return%20items.find(x%20%3D%3E%20x.id%20%3D%3D%3D%20id)%3B%0D%0A%7D%0D%0A%0D%0Aconst%20donalds%20%3D%20%5B%0D%0A%20%20%20%20%7B%20id%3A%201%2C%20name%3A%20'Donald%20Tusk'%20%7D%2C%0D%0A%20%20%20%20%7B%20id%3A%202%2C%20name%3A%20'Donald%20Trump'%20%7D%2C%0D%0A%5D%3B%0D%0A%0D%0Aconst%20donaldTheFirst%20%3D%20getItemById(donalds%2C%201)%20as%20any%3B%0D%0A%0D%0Aalert(donaldTheFirst.name)%3B%0D%0A">
+                            Wrong
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=function%20getItemById%3CId%2C%20Item%20extends%20%7B%20id%3A%20Id%20%7D%3E(%0D%0A%20%20%20%20items%3A%20Item%5B%5D%2C%0D%0A%20%20%20%20id%3A%20Id%2C%0D%0A)%20%7B%0D%0A%20%20%20%20return%20items.find(x%20%3D%3E%20x.id%20%3D%3D%3D%20id)%3B%0D%0A%7D%0D%0A%0D%0Aconst%20donalds%20%3D%20%5B%0D%0A%20%20%20%20%7B%20id%3A%201%2C%20name%3A%20'Donald%20Tusk'%20%7D%2C%0D%0A%20%20%20%20%7B%20id%3A%202%2C%20name%3A%20'Donald%20Trump'%20%7D%2C%0D%0A%5D%3B%0D%0A%0D%0Aconst%20donaldTheFirst%20%3D%20getItemById(donalds%2C%201)%3B%0D%0A%0D%0Aalert(donaldTheFirst.name)%3B%0D%0A">
+                            Correct
+                        </a>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h2>Be careful with currying</h2>
+                <ul>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=const%20pair%20%3D%20%3CA%2C%20B%3E%20(a%3A%20A)%20%3D%3E%20(b%3A%20B)%20%3D%3E%0D%0A%20%20%20%20%5Ba%2C%20b%5D%20as%20%5BA%2C%20B%5D%3B%0D%0A%0D%0Aconst%20p%20%3D%20pair('first')(%7B%20second%3A%20'second'%20%7D)%3B%0D%0A%0D%0Aalert(p%5B1%5D.second)%3B%0D%0A">
+                            Wrong
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=const%20pair%20%3D%20%3CA%3E%20(a%3A%20A)%20%3D%3E%20%3CB%3E%20(b%3A%20B)%20%3D%3E%0D%0A%20%20%20%20%5Ba%2C%20b%5D%20as%20%5BA%2C%20B%5D%3B%0D%0A%0D%0Aconst%20p%20%3D%20pair('first')(%7B%20second%3A%20'second'%20%7D)%3B%0D%0A%0D%0Aalert(p%5B1%5D.second)%3B%0D%0A">
+                            Correct
+                        </a>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h2>keyof</h2>
+                <ul>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=const%20form%20%3D%20%7B%0D%0A%20%20%20%20firstName%3A%20''%2C%0D%0A%20%20%20%20email%3A%20''%2C%0D%0A%20%20%20%20isAdult%3A%20false%2C%0D%0A%20%20%20%20numberOfCats%3A%200%2C%0D%0A%7D%0D%0A%0D%0Afunction%20setFormValue(key%3A%20string%2C%20value%3A%20Object)%20%7B%0D%0A%20%20%20%20form%5Bkey%5D%20%3D%20value%3B%0D%0A%7D%0D%0A%0D%0AsetFormValue('lastName'%2C%201)%3B%0D%0A">
+                            Wrong
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=enum%20FormKeys%20%7B%0D%0A%20%20%20%20FirstName%2C%0D%0A%20%20%20%20Email%2C%0D%0A%20%20%20%20IsAdult%2C%0D%0A%20%20%20%20NumberOfCats%2C%0D%0A%7D%0D%0A%0D%0Aconst%20form%20%3D%20%7B%0D%0A%20%20%20%20%5BFormKeys.FirstName%5D%3A%20''%2C%0D%0A%20%20%20%20%5BFormKeys.Email%5D%3A%20''%2C%0D%0A%20%20%20%20%5BFormKeys.IsAdult%5D%3A%20false%2C%0D%0A%20%20%20%20%5BFormKeys.NumberOfCats%5D%3A%200%2C%0D%0A%7D%0D%0A%0D%0Afunction%20setFormValue(key%3A%20FormKeys%2C%20value%3A%20string%20%7C%20number%20%7C%20boolean)%20%7B%0D%0A%20%20%20%20form%5Bkey%5D%20%3D%20value%3B%0D%0A%7D%0D%0A%0D%0AsetFormValue(FormKeys.FirstName%2C%201)%3B%0D%0A">
+                            A bit better
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.typescriptlang.org/play/index.html#src=const%20form%20%3D%20%7B%0D%0A%20%20%20%20firstName%3A%20''%2C%0D%0A%20%20%20%20email%3A%20''%2C%0D%0A%20%20%20%20isAdult%3A%20false%2C%0D%0A%20%20%20%20numberOfCats%3A%200%2C%0D%0A%7D%0D%0A%0D%0Atype%20Form%20%3D%20typeof%20form%3B%0D%0A%0D%0Afunction%20setFormValue%3CK%20extends%20keyof%20Form%3E%0D%0A(%0D%0A%20%20%20%20key%3A%20K%2C%0D%0A%20%20%20%20value%3A%20Form%5BK%5D%2C%0D%0A)%20%7B%0D%0A%20%20%20%20form%5Bkey%5D%20%3D%20value%3B%0D%0A%7D%0D%0A%0D%0AsetFormValue('lastName'%2C%20'John')%3B%0D%0AsetFormValue('firstName'%2C%20true)%3B%0D%0AsetFormValue('firstName'%2C%20'John')%3B%0D%0A">
+                            Correct
+                        </a>
+                    </li>
+                </ul>
             </section>
         </section>
     </div>
