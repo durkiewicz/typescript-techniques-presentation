@@ -34,7 +34,16 @@
         <section>
             <h2>Agenda</h2>
             <ol>
-                <li>TODO.</li>
+                <li>Introduction</li>
+                <li>General remarks</li>
+                <li>Type algebra</li>
+                <li>Classes</li>
+                <li>Enums</li>
+                <li>Currying</li>
+                <li>Function / method overloading</li>
+                <li>Generic types</li>
+                <li>Summary</li>
+                <li>Questions</li>
             </ol>
         </section>
         <section>
@@ -43,33 +52,62 @@
                 <li>1st release: 2012-10-01</li>
                 <li>Currently in version 2.3</li>
                 <li>Open source, maintained by Microsoft</li>
+                <li>Superset of ES6</li>
                 <li>Compiled to JavaScript</li>
                 <li>Only a language (without frameworks)</li>
             </ul>
         </section>
-        <section data-markdown>
-            <script type="text/template">
-                ## `--strict` flag
+        <section>
+            <section>
+                <h2>General remarks</h2>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## `--strict` flag
 
-                Strict behaviour is not by default.
+                    Strict behaviour is not by default.
 
-                Equivalent to:
-                ```
-                --strictNullChecks
-                --noImplicitAny
-                --noImplicitThis
-                --alwaysStrict
-                ```
-            </script>
+                    Equivalent to:
+                    ```
+                    --strictNullChecks
+                    --noImplicitAny
+                    --noImplicitThis
+                    --alwaysStrict
+                    ```
+                </script>
+            </section>
+            <section>
+                <h2>Avoid dynamic typing</h2>
+                <ul>
+                    <li>any</li>
+                    <li>Function</li>
+                    <li>bind, call, apply</li>
+                </ul>
+            </section>
         </section>
         <section>
-            <h2>Avoid dynamic typing</h2>
+            <h2>Type algebra</h2>
             <ul>
-                <li>any</li>
-                <li>Function</li>
-                <li>Object</li>
-                <li>object</li>
-                <li>bind, call, apply</li>
+                <li>
+                    <a href="https://www.typescriptlang.org/play/index.html#src=interface%20Vehicle%20%7B%0D%0A%20%20%20%20numberOfWheels%3A%20number%3B%0D%0A%7D%0D%0A%0D%0Ainterface%20Colorful%20%7B%0D%0A%20%20%20%20color%3A%20string%3B%0D%0A%7D%0D%0A%0D%0Atype%20ColorfulVehicle%20%3D%20Vehicle%20%26%20Colorful%3B%0D%0A%0D%0Afunction%20describeVehicle(v%3A%20ColorfulVehicle%20%7C%20string)%20%7B%0D%0A%20%20%20%20if%20(typeof%20v%20%3D%3D%3D%20'string')%20%7B%0D%0A%20%20%20%20%20%20%20%20alert(v)%3B%0D%0A%20%20%20%20%7D%20else%20%7B%0D%0A%20%20%20%20%20%20%20%20alert(%60%24%7Bv.color%7D%20vehicle%20with%20%24%7Bv.numberOfWheels%7D%20wheels.%60)%3B%0D%0A%20%20%20%20%7D%20%20%20%20%0D%0A%7D">
+                        AND / OR operations on types
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.typescriptlang.org/play/index.html#src=interface%20Model%20%7B%0D%0A%20%20%20%20searchPhrase%3A%20string%3B%0D%0A%20%20%20%20results%3A%20string%5B%5D%3B%0D%0A%7D%0D%0A%0D%0Ainterface%20SetSearchPhrase%20%7B%0D%0A%20%20%20%20type%3A%20'SetSearchPhrase'%3B%0D%0A%20%20%20%20payload%3A%20string%3B%0D%0A%7D%0D%0A%0D%0Ainterface%20SetResults%20%7B%0D%0A%20%20%20%20type%3A%20'SetResults'%3B%0D%0A%20%20%20%20payload%3A%20string%5B%5D%3B%0D%0A%7D%0D%0A%0D%0Atype%20Action%20%3D%20SetSearchPhrase%20%7C%20SetResults%3B%0D%0A%0D%0A%2F%2F%20Tip%3A%20add%20explicit%20type%20annotation%20for%20function's%20result%20type%20when%20you%20have%0D%0A%2F%2F%20%20%20%20%20%20more%20than%201%20%60return%60%0D%0Afunction%20reduce(model%3A%20Model%2C%20action%3A%20Action)%3A%20Model%20%7B%0D%0A%20%20%20%20switch%20(action.type)%20%7B%0D%0A%20%20%20%20%20%20%20%20case%20'SetSearchPhrase'%3A%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20%7B%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20searchPhrase%3A%20action.payload%2C%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20results%3A%20%5B%5D%2C%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%3B%0D%0A%20%20%20%20%20%20%20%20case%20'SetResults'%3A%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20%7B%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20searchPhrase%3A%20model.searchPhrase%2C%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20results%3A%20action.payload%2C%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%3B%0D%0A%20%20%20%20%20%20%20%20default%3A%0D%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20model%3B%0D%0A%20%20%20%20%7D%20%0D%0A%7D">
+                        Interfaces for Redux actions
+                    </a>
+                </li>
+                <li>
+                    DRY. Instead of
+                        <a href="https://www.typescriptlang.org/play/index.html#src=interface%20UserForm%20%7B%0D%0A%20%20%20%20name%3A%20string%3B%0D%0A%20%20%20%20email%3A%20string%3B%0D%0A%20%20%20%20age%3A%20number%3B%0D%0A%20%20%20%20acceptsTerms%3A%20boolean%3B%0D%0A%7D%0D%0A%0D%0Aconst%20initialUserForm%3A%20UserForm%20%3D%20%7B%0D%0A%20%20%20%20name%3A%20''%2C%0D%0A%20%20%20%20email%3A%20''%2C%0D%0A%20%20%20%20age%3A%200%2C%0D%0A%20%20%20%20acceptsTerms%3A%20false%2C%0D%0A%7D%3B%0D%0A">
+                            this
+                        </a>
+                    write
+                        <a href="https://www.typescriptlang.org/play/index.html#src=const%20initialUserForm%20%3D%20%7B%0D%0A%20%20%20%20name%3A%20''%2C%0D%0A%20%20%20%20email%3A%20''%2C%0D%0A%20%20%20%20age%3A%200%2C%0D%0A%20%20%20%20acceptsTerms%3A%20false%2C%0D%0A%7D%3B%0D%0A%0D%0Atype%20UserForm%20%3D%20typeof%20initialUserForm%3B%0D%0A">
+                            this.
+                        </a>
+                </li>
             </ul>
         </section>
         <section>
@@ -111,6 +149,21 @@
                     </li>
                 </ul>
             </section>
+        </section>
+        <section>
+            <h2>Enums</h2>
+            <ul>
+                <li>
+                    <a href="https://www.typescriptlang.org/play/index.html#src=enum%20Tribes%20%7B%0D%0A%20%20%20%20UX%2C%0D%0A%20%20%20%20Data%2C%0D%0A%20%20%20%20Automotive%0D%0A%7D%0D%0A%0D%0Aconst%20uxValue%20%3D%20Tribes.UX%3B%0D%0A%0D%0Aconst%20uxName%20%3D%20Tribes%5BTribes.UX%5D%3B%20%2F%2F%20%22UX%22%0D%0A%0D%0Aalert(JSON.stringify(Tribes%2C%20null%2C%202))%3B">
+                        When you need names...
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.typescriptlang.org/play/index.html#src=const%20enum%20Tribes%20%7B%0D%0A%20%20%20%20UX%2C%0D%0A%20%20%20%20Data%2C%0D%0A%20%20%20%20Automotive%0D%0A%7D%0D%0A%0D%0Aconst%20uxValue%20%3D%20Tribes.UX%3B%0D%0A">
+                        When you do not need names...
+                    </a>
+                </li>
+            </ul>
         </section>
         <section>
             <h2>Currying</h2>
@@ -191,6 +244,18 @@
                     </li>
                 </ul>
             </section>
+        </section>
+        <section>
+            <h2>Summary</h2>
+            <ul>
+                <li>Avoid dynamic typing</li>
+                <li>Learn and use syntactic sugars</li>
+                <li>Learn types algebra well</li>
+                <li>Don't spoil your generics</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Questions?</h2>
         </section>
     </div>
 </div>
